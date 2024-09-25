@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="gibbs-reconstructor",
-    version="0.1.1",
+    version="0.2.0",
     author="Félix Laplante",
     author_email="flheight0@gmail.com",
     description="Gibbs Reconstruction for linear data reconstruction",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/flheight/spectral-bridges-pypi/",
+    url="https://github.com/flheight/gibbs-reconstructor-pypi/",
     packages=find_packages(),
     install_requires=[
         "numpy",
