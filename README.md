@@ -1,4 +1,4 @@
-# GibbsReconstructor
+# Gibbs Reconstructor
 
 The `GibbsReconstructor` is a Python class designed to perform reconstruction of missing values in partially deleted signals, images, or sequences. It uses a regularized approach based on Gibbs sampling methods to estimate missing entries, making it ideal for scenarios where data might be incomplete or corrupted. This approach is particularly useful for tasks such as image inpainting, signal reconstruction, and sequence completion.
 
