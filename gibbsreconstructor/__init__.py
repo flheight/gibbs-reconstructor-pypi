@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.linalg.lapack import dposv
+from scipy.linalg import solve
 
 
 class GibbsReconstructor:
@@ -74,21 +75,16 @@ class GibbsReconstructor:
         Returns:
             ndarray: A reconstructed 1D NumPy array with estimated values for the missing entries.
         """
-        p = z.size
-        missing_idxs = np.where(np.isnan(z))[0]
+        p = z.shape[1]
+        missing_idxs = np.where(np.isnan(z))
 
-        z[missing_idxs] = np.random.randn(missing_idxs.size)
+        z[missing_idxs] = 0
 
         A = np.eye(p + 1)
         for k in missing_idxs:
             A[k] = np.dot(self.coef_[k], A)
 
-        D, P = np.linalg.eig(A)
-        D = np.diag(D)
-        P_inv = np.linalg.inv(P)
-        D[np.abs(D) < 1] = 0
-        A_inf = P @ D @ P_inv
+        A = A[:p, :p]
+        A[missing_idxs, missing_idxs] -= 1
 
-        A_inf = A_inf.real[:p, :p]
-
-        return A_inf @ z
+        return solve(A, z.T).T
