@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="gibbs-reconstructor",
-    version="0.1.0",
+    version="0.1.1",
     author="Félix Laplante",
     author_email="flheight0@gmail.com",
     description="Gibbs Reconstruction for linear data reconstruction",
