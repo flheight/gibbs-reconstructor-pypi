@@ -49,7 +49,6 @@ class GibbsReconstructor:
         beta = np.zeros((p + 1, p + 1))
 
         for k in range(p):
-            print(k)
             mask = np.ones(p + 1, dtype=bool)
             mask[k] = False
 
