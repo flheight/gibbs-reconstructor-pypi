@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.linalg.blas import dgemm
 from scipy.linalg.lapack import dposv
 
 
@@ -42,8 +43,9 @@ class GibbsReconstructor:
         n, p = X.shape
 
         X = np.hstack((X, np.ones((n, 1))))
+        X = np.array(X, order="F", dtype=np.float64)
 
-        XtX = X.T @ X
+        XtX = dgemm(1.0, X, X, trans_a=True)
         XtX.flat[:: p + 2] += n * self.alpha
 
         beta = np.zeros((p + 1, p + 1))
@@ -79,7 +81,7 @@ class GibbsReconstructor:
 
         A = np.eye(p + 1)
         for k in missing_idxs:
-            A[k] = np.dot(self.coef_[k], A)
+            A[k] = self.coef_[k] @ A
 
         A = A[:p, :p]
         A[missing_idxs, missing_idxs] -= 1
