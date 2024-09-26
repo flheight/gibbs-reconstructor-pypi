@@ -44,8 +44,6 @@ class GibbsReconstructor:
 
         X = np.hstack((X, np.ones((n, 1))))
 
-        beta = np.random.randn(p + 1, p + 1)
-
         XtX = X.T @ X
 
         beta = np.zeros((p + 1, p + 1))
