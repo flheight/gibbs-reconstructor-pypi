@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="gibbs-reconstructor",
-    version="0.2.3",
+    version="1.0.0",
     author="Félix Laplante",
     author_email="flheight0@gmail.com",
     description="Gibbs Reconstruction for linear data reconstruction",
@@ -12,7 +12,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         "numpy",
-        "scipy",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
