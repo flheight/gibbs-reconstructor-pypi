@@ -1,6 +1,4 @@
 import numpy as np
-from scipy.linalg.blas import dgemm
-from scipy.linalg.lapack import dposv
 
 
 class GibbsReconstructor:
@@ -14,7 +12,7 @@ class GibbsReconstructor:
         alpha (float): Regularization parameter for the Ridge regression.
 
     Methods:
-        fit(X): Fits the model to the input data matrix X.
+        fit(X, verbose=False): Fits the model to the input data matrix X, with an option to enable verbosity.
         predict(z): Predicts missing values in the input array z.
     """
 
@@ -27,7 +25,7 @@ class GibbsReconstructor:
         """
         self.alpha = alpha
 
-    def fit(self, X):
+    def fit(self, X, verbose=False):
         """
         Fits the GibbsReconstructor model to the input data.
 
@@ -36,17 +34,23 @@ class GibbsReconstructor:
 
         Parameters:
             X (ndarray): A 2D NumPy array of shape (n_samples, n_features) representing the input data.
+            verbose (bool): If True, prints progress updates during the fitting process. Default is False.
 
         Returns:
             None: The coefficients are stored in the instance variable coef_.
+
+        Notes:
+            - If verbose is set to True, progress updates will be printed as each feature is processed.
+            - The progress is shown as a percentage of features processed during model fitting.
         """
         n, p = X.shape
 
         X = np.hstack((X, np.ones((n, 1))))
-        X = np.array(X, order="F", dtype=np.float64)
 
-        XtX = dgemm(1.0, X, X, trans_a=True)
+        XtX = X.T @ X
         XtX.flat[:: p + 2] += n * self.alpha
+
+        XtX_inv = np.linalg.inv(XtX)
 
         self.coef_ = np.zeros((p + 1, p + 1))
 
@@ -54,17 +58,22 @@ class GibbsReconstructor:
             mask = np.ones(p + 1, dtype=bool)
             mask[k] = False
 
-            LHS = np.array(XtX[np.ix_(mask, mask)], order="F", dtype=np.float64)
-            RHS = np.array(XtX[mask, k], order="F", dtype=np.float64)
+            b = XtX_inv[k, mask]
+            c = XtX_inv[k, k]
 
-            self.coef_[k, mask] = dposv(LHS, RHS)[1]
+            LHS = XtX_inv[np.ix_(mask, mask)] - np.outer(b, b) / c
+            RHS = XtX[mask, k]
+
+            self.coef_[k, mask] = LHS @ RHS
+
+            if verbose:
+                print(f"{(k + 1) / p * 100:.2f}% done")
 
     def predict(self, z):
         """
         Predicts missing values in the input array z using the fitted model.
 
-        This method handles missing values by initializing them with random draws from a normal distribution
-        and reconstructs the data based on the learned coefficients.
+        This method reconstructs the data based on the learned coefficients.
 
         Parameters:
             z (ndarray): A 1D NumPy array containing the data with potential missing values (NaNs).
