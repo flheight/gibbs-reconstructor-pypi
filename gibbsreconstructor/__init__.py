@@ -45,6 +45,7 @@ class GibbsReconstructor:
         X = np.hstack((X, np.ones((n, 1))))
 
         XtX = X.T @ X
+        XtX.flat[:: p + 2] += n * self.alpha
 
         beta = np.zeros((p + 1, p + 1))
 
@@ -53,7 +54,6 @@ class GibbsReconstructor:
             mask[k] = False
 
             LHS = np.array(XtX[mask][:, mask], order="F", dtype=np.float64)
-            LHS.flat[:: p + 1] += n * self.alpha
             RHS = np.array(XtX[mask, k], order="F", dtype=np.float64)
 
             beta[k, mask] = dposv(LHS, RHS)[1]
