@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.linalg.lapack import dposv
-from scipy.linalg import solve
 
 
 class GibbsReconstructor:
@@ -50,10 +49,11 @@ class GibbsReconstructor:
         beta = np.zeros((p + 1, p + 1))
 
         for k in range(p):
+            print(k)
             mask = np.ones(p + 1, dtype=bool)
             mask[k] = False
 
-            LHS = np.array(XtX[mask][:, mask], order="F", dtype=np.float64)
+            LHS = np.array(XtX[np.ix_(mask, mask)], order="F", dtype=np.float64)
             RHS = np.array(XtX[mask, k], order="F", dtype=np.float64)
 
             beta[k, mask] = dposv(LHS, RHS)[1]
@@ -85,4 +85,4 @@ class GibbsReconstructor:
         A = A[:p, :p]
         A[missing_idxs, missing_idxs] -= 1
 
-        return solve(A, z.T).T
+        return np.linalg.solve(A, z.T).T
