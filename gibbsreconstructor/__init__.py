@@ -48,7 +48,7 @@ class GibbsReconstructor:
         XtX = dgemm(1.0, X, X, trans_a=True)
         XtX.flat[:: p + 2] += n * self.alpha
 
-        beta = np.zeros((p + 1, p + 1))
+        self.coef_ = np.zeros((p + 1, p + 1))
 
         for k in range(p):
             mask = np.ones(p + 1, dtype=bool)
@@ -57,9 +57,7 @@ class GibbsReconstructor:
             LHS = np.array(XtX[np.ix_(mask, mask)], order="F", dtype=np.float64)
             RHS = np.array(XtX[mask, k], order="F", dtype=np.float64)
 
-            beta[k, mask] = dposv(LHS, RHS)[1]
-
-        self.coef_ = beta
+            self.coef_[k, mask] = dposv(LHS, RHS)[1]
 
     def predict(self, z):
         """
