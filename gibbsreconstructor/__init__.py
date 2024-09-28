@@ -75,10 +75,10 @@ class GibbsReconstructor:
         This method reconstructs the data based on the learned coefficients.
 
         Parameters:
-            z (ndarray): A 1D NumPy array containing the data with potential missing values (NaNs).
+            z (ndarray): A 2D NumPy array containing the data with potential missing values (NaNs).
 
         Returns:
-            ndarray: A reconstructed 1D NumPy array with estimated values for the missing entries.
+            ndarray: A reconstructed 2D NumPy array with estimated values for the missing entries.
         """
         p = z.shape[1]
         missing_idxs = np.where(np.isnan(z[0]))
