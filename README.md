@@ -35,4 +35,4 @@ The `GibbsReconstructor` is a Python class designed to perform reconstruction of
 To use `GibbsReconstructor`, ensure you have the required dependencies installed:
 
 ```bash
-pip install numpy scipy
+pip install numpy tqdm
