@@ -61,10 +61,10 @@ class GibbsReconstructor:
             b = XtX_inv[k, mask]
             c = XtX_inv[k, k]
 
-            LHS = XtX_inv[np.ix_(mask, mask)] - np.outer(b, b) / c
+            LHS = XtX_inv[np.ix_(mask, mask)]
             RHS = XtX[mask, k]
 
-            self.coef_[k, mask] = LHS @ RHS
+            self.coef_[k, mask] = LHS @ RHS - b * ((b @ RHS) / c)
 
     def predict(self, z):
         """
