@@ -81,9 +81,9 @@ class GibbsReconstructor:
             ndarray: A reconstructed 1D NumPy array with estimated values for the missing entries.
         """
         p = z.shape[1]
-        missing_idxs = np.where(np.isnan(z))
+        missing_idxs = np.where(np.isnan(z[0))
 
-        z[missing_idxs] = 0
+        z[:, missing_idxs] = 0
 
         A = np.eye(p + 1)
         for k in missing_idxs:
