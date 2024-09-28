@@ -54,8 +54,8 @@ class GibbsReconstructor:
 
         self.coef_ = np.zeros((p + 1, p + 1))
 
+        mask = np.ones(p + 1, dtype=bool)
         for k in tqdm(range(p), desc="Fitting model", disable=not verbose):
-            mask = np.ones(p + 1, dtype=bool)
             mask[k] = False
 
             b = XtX_inv[k, mask]
@@ -65,6 +65,8 @@ class GibbsReconstructor:
             RHS = XtX[mask, k]
 
             self.coef_[k, mask] = LHS @ RHS - b * ((b @ RHS) / c)
+
+            mask[k] = True
 
     def predict(self, z):
         """
@@ -86,7 +88,6 @@ class GibbsReconstructor:
         A = np.eye(p + 1)
         for k in missing_idxs:
             A[k] = self.coef_[k] @ A
-
         A = A[:p, :p]
         A[missing_idxs, missing_idxs] -= 1
 
