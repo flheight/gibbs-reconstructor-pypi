@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 
 
 class GibbsReconstructor:
@@ -40,8 +41,7 @@ class GibbsReconstructor:
             None: The coefficients are stored in the instance variable coef_.
 
         Notes:
-            - If verbose is set to True, progress updates will be printed as each feature is processed.
-            - The progress is shown as a percentage of features processed during model fitting.
+            - If verbose is set to True, progress updates will be shown using tqdm.
         """
         n, p = X.shape
 
@@ -54,7 +54,7 @@ class GibbsReconstructor:
 
         self.coef_ = np.zeros((p + 1, p + 1))
 
-        for k in range(p):
+        for k in tqdm(range(p), desc="Fitting model", disable=not verbose):
             mask = np.ones(p + 1, dtype=bool)
             mask[k] = False
 
@@ -65,9 +65,6 @@ class GibbsReconstructor:
             RHS = XtX[mask, k]
 
             self.coef_[k, mask] = LHS @ RHS
-
-            if verbose:
-                print(f"{(k + 1) / p * 100:.2f}% done")
 
     def predict(self, z):
         """
