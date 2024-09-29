@@ -12,7 +12,7 @@ class GibbsReconstructor:
         alpha (float): Regularization parameter for the Ridge regression.
 
     Methods:
-        fit(X, verbose=False): Fits the model to the input data matrix X, with an option to enable verbosity.
+        fit(X): Fits the model to the input data matrix X.
         predict(z): Predicts missing values in the input array z.
     """
 
