@@ -1,5 +1,4 @@
 import numpy as np
-from tqdm import tqdm
 
 
 class GibbsReconstructor:
@@ -39,9 +38,6 @@ class GibbsReconstructor:
 
         Returns:
             None: The coefficients are stored in the instance variable coef_.
-
-        Notes:
-            - If verbose is set to True, progress updates will be shown using tqdm.
         """
         n, p = X.shape
 
@@ -54,15 +50,9 @@ class GibbsReconstructor:
 
         np.fill_diagonal(XtX, 0)
 
-        self.coef_ = np.empty((p + 1, p + 1))
+        XtX_inv_XtX = XtX_inv @ XtX
 
-        for k in tqdm(range(p), desc="Fitting model", disable=not verbose):
-            b = XtX_inv[k]
-            c = XtX_inv[k, k]
- 
-            RHS = XtX[:, k]
-
-            self.coef_[k] = XtX_inv @ RHS - b * ((b @ RHS) / c)
+        self.coef_ = XtX_inv_XtX - XtX_inv * ((np.diag(XtX_inv_XtX) / np.diag(XtX_inv)))[np.newaxis, :]
 
     def predict(self, z):
         """
