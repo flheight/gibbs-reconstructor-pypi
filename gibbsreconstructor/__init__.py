@@ -50,11 +50,11 @@ class GibbsReconstructor:
 
         np.fill_diagonal(XtX, 0)
 
-        XtX_XtX_inv = XtX @ XtX_inv
+        XtX_inv_XtX = XtX_inv @ XtX
 
         self.coef_ = (
-            XtX_XtX_inv
-            - XtX_inv * ((np.diag(XtX_XtX_inv) / np.diag(XtX_inv)))[:, np.newaxis]
+            XtX_inv_XtX
+            - XtX_inv * ((np.diag(XtX_XtX_inv) / np.diag(XtX_inv)))[np.newaxis, :]
         )
 
     def predict(self, z):
@@ -76,7 +76,7 @@ class GibbsReconstructor:
 
         A = np.eye(p + 1)
         for k in missing_idxs:
-            A[k] = self.coef_[k] @ A
+            A[k] = self.coef_[:, k].T @ A
         A = A[:p, :p]
         A[missing_idxs, missing_idxs] -= 1
 
