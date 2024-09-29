@@ -52,21 +52,17 @@ class GibbsReconstructor:
 
         XtX_inv = np.linalg.inv(XtX)
 
-        self.coef_ = np.zeros((p + 1, p + 1))
+        np.fill_diagonal(XtX, 0)
 
-        mask = np.ones(p + 1, dtype=bool)
+        self.coef_ = np.empty((p + 1, p + 1))
+
         for k in tqdm(range(p), desc="Fitting model", disable=not verbose):
-            mask[k] = False
-
-            b = XtX_inv[k, mask]
+            b = XtX_inv[k]
             c = XtX_inv[k, k]
+ 
+            RHS = XtX[:, k]
 
-            LHS = XtX_inv[np.ix_(mask, mask)]
-            RHS = XtX[mask, k]
-
-            self.coef_[k, mask] = LHS @ RHS - b * ((b @ RHS) / c)
-
-            mask[k] = True
+            self.coef_[k] = XtX_inv @ RHS - b * ((b @ RHS) / c)
 
     def predict(self, z):
         """
