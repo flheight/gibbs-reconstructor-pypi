@@ -52,7 +52,10 @@ class GibbsReconstructor:
 
         XtX_XtX_inv = XtX @ XtX_inv
 
-        self.coef_ = XtX_XtX_inv - XtX_inv * ((np.diag(XtX_XtX_inv) / np.diag(XtX_inv)))[:, np.newaxis]
+        self.coef_ = (
+            XtX_XtX_inv
+            - XtX_inv * ((np.diag(XtX_XtX_inv) / np.diag(XtX_inv)))[:, np.newaxis]
+        )
 
     def predict(self, z):
         """
