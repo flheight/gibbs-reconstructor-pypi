@@ -50,9 +50,9 @@ class GibbsReconstructor:
 
         np.fill_diagonal(XtX, 0)
 
-        XtX_inv_XtX = XtX_inv @ XtX
+        XtX_XtX_inv = XtX @ XtX_inv
 
-        self.coef_ = XtX_inv_XtX - XtX_inv * ((np.diag(XtX_inv_XtX) / np.diag(XtX_inv)))[np.newaxis, :]
+        self.coef_ = XtX_XtX_inv - XtX_inv * ((np.diag(XtX_XtX_inv) / np.diag(XtX_inv)))[:, np.newaxis]
 
     def predict(self, z):
         """
