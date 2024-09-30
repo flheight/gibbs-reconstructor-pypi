@@ -16,16 +16,16 @@ class GibbsReconstructor:
         predict(z): Predicts missing values in the input array z.
     """
 
-    def __init__(self, alpha=1e-3):
+    def __init__(self, alpha=0):
         """
         Initializes the GibbsReconstructor with a given regularization parameter.
 
         Parameters:
-            alpha (float): Regularization parameter. Default is 1e-3.
+            alpha (float): Regularization parameter. Default is 0.
         """
         self.alpha = alpha
 
-    def fit(self, X, verbose=False):
+    def fit(self, X):
         """
         Fits the GibbsReconstructor model to the input data.
 
@@ -34,7 +34,6 @@ class GibbsReconstructor:
 
         Parameters:
             X (ndarray): A 2D NumPy array of shape (n_samples, n_features) representing the input data.
-            verbose (bool): If True, prints progress updates during the fitting process. Default is False.
 
         Returns:
             None: The coefficients are stored in the instance variable coef_.
